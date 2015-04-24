@@ -14,18 +14,19 @@
  */
 package fr.plafogaj.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import fr.plafogaj.game.BananaKnight;
 
-public class Splash implements Screen {
+public class Splash implements Screen, InputProcessor {
 
     private Texture m_textureSplash;
     private Texture m_textureLogo;
@@ -48,8 +49,11 @@ public class Splash implements Screen {
         m_music = Gdx.audio.newMusic(Gdx.files.internal("music/splash.mp3"));
     }
 
+
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(this);
+        Gdx.input.setCursorCatched(true);
         m_music.setLooping(true);
         m_music.play();
         m_stage.addActor(m_splashImage);
@@ -60,12 +64,13 @@ public class Splash implements Screen {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        Timer.schedule(new Timer.Task() {
-                            @Override
-                            public void run() {
-                                m_music.setVolume(m_music.getVolume() - 0.05f);
-                            }
-                        },0,0.3f, 21);
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            if(m_music.getVolume() >= 0)
+                                m_music.setVolume(m_music.getVolume() - 0.01f);
+                        }
+                    }, 1.5f, 0.05f, 100);
                     }
                 }),
                 Actions.fadeOut(3),
@@ -73,7 +78,7 @@ public class Splash implements Screen {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new MainMenu());
+                        Splash.this.stopAnimationSplash();
                     }
                 })));
 
@@ -86,9 +91,13 @@ public class Splash implements Screen {
         )));
     }
 
+    public void stopAnimationSplash(){
+        ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new MainMenu());
+    }
+
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         m_stage.act(delta);  // we update all actors
         m_stage.draw();
@@ -121,5 +130,47 @@ public class Splash implements Screen {
         m_textureSplash.dispose();
         m_stage.dispose();
         m_music.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.ESCAPE || keycode == Input.Keys.SPACE)
+            this.stopAnimationSplash();
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
