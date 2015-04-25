@@ -1,0 +1,14 @@
+{
+  "rootPath" : "img/sprite/player/",
+  "textureFile" : "player.png",
+  "colRow":{
+    "x":0,
+    "y":0
+  },
+  "texturesRegion": {
+    "walk" : [],
+    "jump" : [],
+    "run"  : [],
+    "stand": []
+  }
+}
