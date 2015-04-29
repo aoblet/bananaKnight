@@ -47,7 +47,7 @@ public class AnimationConfig {
         TextureRegion[] tmp = new TextureRegion[m_coordInTexture.size()];
         int i = -1;
         for(Vector2 v: m_coordInTexture)
-            tmp[++i] = m_sheetTextureRegion[(int)v.x][(int)v.y];
+            tmp[++i] = m_sheetTextureRegion[(int)v.y][(int)v.x];
         m_animation = new Animation(0.25f, tmp);
     }
 
