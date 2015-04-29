@@ -12,9 +12,8 @@
  * You should have received a copy of the GNU General Public License
  * along with BananaKnight.  If not, see <http://www.gnu.org/licenses/>
  */
-package fr.plafogaj.game.level;
+package fr.plafogaj.game.engine;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -34,35 +33,31 @@ public class TiledMapConfig{
      */
     private TiledMapTileLayer m_collisionLayer;
 
-    private float m_tileUnitScale;
     private OrthogonalTiledMapRenderer m_backgroundFarLayerRenderer;
     private OrthogonalTiledMapRenderer m_backgroundNearLayerRenderer;
     private OrthogonalTiledMapRenderer m_foregroundLayerRenderer;
     private OrthogonalTiledMapRenderer m_collisionLayerRenderer;
 
-    private OrthographicCamera m_camera;
+    private TiledMapOrthographicCamera m_camera;
+
+    public static float TILE_UNIT_SCALE = 1/32f;
 
     public TiledMapConfig(String tmxFile){
         m_map = new TmxMapLoader().load(tmxFile);
-        m_tileUnitScale = 1/32f;
 
         m_backgroundFarLayer = (TiledMapTileLayer)m_map.getLayers().get("backgroundFarLayer");
         m_backgroundNearLayer = (TiledMapTileLayer)m_map.getLayers().get("backgroundNearLayer");
         m_collisionLayer = (TiledMapTileLayer)m_map.getLayers().get("collisionLayer");
         m_foregroundLayer = (TiledMapTileLayer)m_map.getLayers().get("foregroundLayer");
 
-        m_collisionLayerRenderer = new OrthogonalTiledMapRenderer(m_map, m_tileUnitScale);
-        m_backgroundFarLayerRenderer = new OrthogonalTiledMapRenderer(m_map, m_tileUnitScale);
-        m_backgroundNearLayerRenderer = new OrthogonalTiledMapRenderer(m_map, m_tileUnitScale);
-        m_foregroundLayerRenderer = new OrthogonalTiledMapRenderer(m_map, m_tileUnitScale);
+        m_collisionLayerRenderer = new OrthogonalTiledMapRenderer(m_map, TILE_UNIT_SCALE);
+        m_backgroundFarLayerRenderer = new OrthogonalTiledMapRenderer(m_map, TILE_UNIT_SCALE);
+        m_backgroundNearLayerRenderer = new OrthogonalTiledMapRenderer(m_map, TILE_UNIT_SCALE);
+        m_foregroundLayerRenderer = new OrthogonalTiledMapRenderer(m_map, TILE_UNIT_SCALE   );
 
-        m_camera = new OrthographicCamera();
+        m_camera = new TiledMapOrthographicCamera();
         m_camera.setToOrtho(false, 40, 20);
         m_camera.update();
-    }
-
-    public float getTileUnitScale() {
-        return m_tileUnitScale;
     }
 
     public TiledMap getMap() {
@@ -101,7 +96,7 @@ public class TiledMapConfig{
         return m_collisionLayerRenderer;
     }
 
-    public OrthographicCamera getCamera() {
+    public TiledMapOrthographicCamera getCamera() {
         return m_camera;
     }
 }

@@ -12,12 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with BananaKnight.  If not, see <http://www.gnu.org/licenses/>
  */
-package fr.plafogaj.game.level;
+package fr.plafogaj.game.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import fr.plafogaj.game.character.player.Player;
 
 public class GameLevelConfig {
     private FileHandle m_levelFile;
@@ -28,6 +30,8 @@ public class GameLevelConfig {
     private JsonValue m_artefactsConfig;
 
     private TiledMapConfig m_tileMapConfig;
+
+    private Player m_player;
 
     public GameLevelConfig(FileHandle levelFile) throws NullPointerException{
         this.setUpConfig(levelFile);
@@ -43,6 +47,11 @@ public class GameLevelConfig {
         m_artefactsConfig = rootConfig.get("artefactsConfig");
 
         m_tileMapConfig = new TiledMapConfig(m_mapTmxFile.path());
+        m_player = new Player(new Vector2(20,20), m_tileMapConfig);
+    }
+
+    public Player getPlayer() {
+        return m_player;
     }
 
     public TiledMapConfig getTileMapConfig() {
