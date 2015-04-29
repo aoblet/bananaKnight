@@ -119,6 +119,13 @@ public class MainMenu implements Screen{
             }
         });
 
+        m_level1Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new Game(Gdx.files.internal("level/1/configLevel.json")));
+            }
+        });
+
         m_exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -145,7 +152,7 @@ public class MainMenu implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
-                    System.out.println(Gdx.files.getLocalStoragePath() + Gdx.files.internal("bin/tiled").path());
+                    System.out.println(Gdx.files.getLocalStoragePath() + Gdx.files.internal("tiledApp/bin/tiled").path());
                     Runtime.getRuntime().exec(Gdx.files.getLocalStoragePath() + Gdx.files.internal("tiledApp/bin/tiled").path());
                 } catch (Exception e) {
                     System.out.println("Problem occurs");
