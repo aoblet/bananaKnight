@@ -14,32 +14,40 @@
  */
 package fr.plafogaj.game.weapon.longRange;
 
-import com.badlogic.gdx.math.Vector2;
-import fr.plafogaj.game.character.player.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import fr.plafogaj.game.character.Character;
+import fr.plafogaj.game.engine.TiledMapConfig;
+import fr.plafogaj.screens.Game;
+
+import java.util.LinkedList;
 
 public class Arc extends LongRange {
 
-    public Arc(Vector2 pos, Player p){
-        super(pos, p);
+    public Arc(Character c, TiledMapConfig mapConfig){
+        super(c, (Sound)Game.ASSET_MANAGER.get("sound/weapon/throw.mp3"),
+                Gdx.files.internal("img/weapon/arc.png"), mapConfig);
+        m_minBreakTime_cadenceHit = 0.3f;
     }
 
-    public Arc(){
-        this(new Vector2(0,0), null);
+    public Arc(TiledMapConfig mapConfig){
+        this(null, mapConfig);
     }
 
     @Override
-    public void hit(){
-        super.hit();
+    public void hit(TiledMapTileLayer collisionLayer){
+        super.hit(collisionLayer);
 
-        if(!m_isHitable)
+        if(!m_isUsable)
             return;
-        if(!m_character.isFacesRight())
-            m_angle.x = -Math.abs(m_angle.x);
-        else
-            m_angle.x = Math.abs(m_angle.x);
-        m_bullets.add(new Bullet(m_position, m_angle, LongRange.GRAVITY));
+
+        m_forceDirection.x = m_character.isFacesRight() ? Math.abs(m_forceDirection.x) :-Math.abs(m_forceDirection.x);
+        m_bullets.add(new Bullet(m_position.cpy().add(0,m_character.getSize().y*0.5f), m_forceDirection, LongRange.GRAVITY));
     }
 
     @Override
-    public void dispose() {}
+    public void dispose(){
+        super.dispose();
+    }
 }

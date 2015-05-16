@@ -16,5 +16,5 @@
 package fr.plafogaj.game.character;
 
 public enum StateMove {
-    Standing, Walking, Running, Jumping
+    Standing, Walking, Running, Jumping, Throwing, Hitting
 }

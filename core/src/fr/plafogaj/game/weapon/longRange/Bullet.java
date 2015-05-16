@@ -14,27 +14,35 @@
  */
 package fr.plafogaj.game.weapon.longRange;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import fr.plafogaj.game.engine.TiledMapConfig;
 import fr.plafogaj.game.engine.TiledMapOrthographicCamera;
+import fr.plafogaj.screens.Game;
 
 public class Bullet {
     protected Vector2 m_position;
     protected Vector2 m_moveVector;
-    protected float m_gravity;
-    protected Texture m_texture;
     protected Vector2 m_size;
+    protected Texture m_texture;
+    protected float m_gravity;
+    protected float m_rotateForce;
+    protected float m_rotateState;
+    protected TextureRegion m_region;
 
-    public Bullet(Vector2 position, Vector2 move, float gravity){
+    public Bullet(Vector2 position, Vector2 moveForce, float gravity){
         m_position = new Vector2(position);
-        m_moveVector = new Vector2(move);
+        m_moveVector = new Vector2(moveForce);
         m_gravity = gravity;
-        m_texture = new Texture(Gdx.files.internal("img/weapon/bullet.png"));
+        m_texture = Game.ASSET_MANAGER.get("img/weapon/bullet.png");
         m_size = new Vector2(m_texture.getWidth(), m_texture.getHeight()).scl(TiledMapConfig.TILE_UNIT_SCALE);
+        m_rotateState = 0;
+        m_rotateForce = MathUtils.random(-5f, 10f)*(MathUtils.random(-1,1) > 0 ? 1 : -1);
+        m_region = new TextureRegion(m_texture);
     }
 
     public Bullet(){
@@ -42,10 +50,11 @@ public class Bullet {
     }
 
     public void render(Batch toRender){
+        m_rotateState += m_rotateForce;
         if(m_moveVector.x > 0)
-            toRender.draw(m_texture, m_position.x, m_position.y, m_size.x, m_size.y);
+            toRender.draw(m_region, m_position.x, m_position.y, m_size.x/2,m_size.y/2, m_size.x, m_size.y,1,1, m_rotateState);
         else
-            toRender.draw(m_texture, m_position.x + m_size.x, m_position.y, -m_size.x, m_size.y);
+            toRender.draw(m_region,  m_position.x + m_size.x, m_position.y, -m_size.x/2,m_size.y/2, -m_size.x, m_size.y,1,1, m_rotateState);
     }
 
     public void update(){
@@ -100,6 +109,6 @@ public class Bullet {
     }
 
     public void dispose(){
-        m_texture.dispose();
+//        m_texture.dispose();
     }
 }

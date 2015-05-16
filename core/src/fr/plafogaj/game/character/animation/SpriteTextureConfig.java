@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import fr.plafogaj.screens.Game;
 
 public class SpriteTextureConfig {
     private FileHandle m_fileConfig;
@@ -30,6 +31,8 @@ public class SpriteTextureConfig {
     private Vector2 m_colRow;
     private Vector2 m_sizeOneCell;
 
+    private AnimationConfig m_hitAnimationConfig;
+    private AnimationConfig m_throwAnimationConfig;
     private AnimationConfig m_walkAnimationConfig;
     private AnimationConfig m_jumpAnimationConfig;
     private AnimationConfig m_runAnimationConfig;
@@ -41,13 +44,15 @@ public class SpriteTextureConfig {
         // base config
         JsonValue root = new JsonReader().parse(m_fileConfig = fileConfig);
         m_textureFile = Gdx.files.internal(root.get("rootPath").asString() + root.get("textureFile").asString());
-        m_texture = new Texture(m_textureFile);
+        m_texture = Game.ASSET_MANAGER.get(m_textureFile.path());
         m_colRow = new Vector2(root.get("colRow").get("x").asInt(), root.get("colRow").get("y").asInt());
         m_sizeOneCell = new Vector2(m_texture.getWidth() / m_colRow.x, m_texture.getHeight() / m_colRow.y );
 
         // animation config
         JsonValue texturesRegion = root.get("texturesRegion");
         m_sheetTextureRegion = TextureRegion.split(m_texture, (int)m_sizeOneCell.x, (int)m_sizeOneCell.y);
+        m_hitAnimationConfig = new AnimationConfig(m_sheetTextureRegion, texturesRegion.get("hit"));
+        m_throwAnimationConfig = new AnimationConfig(m_sheetTextureRegion, texturesRegion.get("throw"));
         m_standAnimationConfig = new AnimationConfig(m_sheetTextureRegion, texturesRegion.get("stand"));
         m_walkAnimationConfig = new AnimationConfig(m_sheetTextureRegion, texturesRegion.get("walk"));
         m_jumpAnimationConfig = new AnimationConfig(m_sheetTextureRegion, texturesRegion.get("jump"));
@@ -84,6 +89,14 @@ public class SpriteTextureConfig {
 
     public AnimationConfig getStandAnimationConfig() {
         return m_standAnimationConfig;
+    }
+
+    public AnimationConfig getHitAnimationConfig() {
+        return m_hitAnimationConfig;
+    }
+
+    public AnimationConfig getThrowAnimationConfig() {
+        return m_throwAnimationConfig;
     }
 
     public TextureRegion[][] getSheetTextureRegion() {
