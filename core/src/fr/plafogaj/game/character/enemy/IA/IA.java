@@ -15,5 +15,30 @@
 
 package fr.plafogaj.game.character.enemy.IA;
 
+import com.badlogic.gdx.math.Vector2;
+import fr.plafogaj.game.character.enemy.Enemy;
+import fr.plafogaj.game.character.player.Player;
+
+import java.util.LinkedList;
+
 public abstract class IA {
+    protected LinkedList<Player> m_playersList;
+    protected Player m_player; // more readable
+    protected Enemy m_owner;
+    protected boolean m_keepMove;
+    protected Vector2 m_distancePlayerPoint;
+    protected boolean m_isPlayerRight;
+
+    public IA(Player player, Enemy owner){
+        m_distancePlayerPoint = new Vector2();
+        m_playersList = new LinkedList<Player>();
+        m_playersList.add((m_player=player));
+        m_owner = owner;
+        m_keepMove = false;
+    }
+
+    public abstract void process();
+    public abstract void sentinel();
+    public abstract void attack();
+    public abstract void defend();
 }
