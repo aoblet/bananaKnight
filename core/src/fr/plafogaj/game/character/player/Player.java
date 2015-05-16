@@ -24,129 +24,73 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import fr.plafogaj.game.character.Character;
 import fr.plafogaj.game.character.StateMove;
+import fr.plafogaj.game.character.enemy.Enemy;
 import fr.plafogaj.game.engine.TiledMapConfig;
 import fr.plafogaj.game.engine.TiledMapOrthographicCamera;
-import fr.plafogaj.game.weapon.Weapon;
 import fr.plafogaj.game.weapon.longRange.Arc;
-import fr.plafogaj.game.weapon.longRange.LongRange;
-import fr.plafogaj.game.weapon.shortRange.Sword;
+import fr.plafogaj.screens.Game;
+
+import java.util.LinkedList;
 
 public class Player extends Character{
-    private static float MAX_VELOCITY = 0.1f;
-    private static float GRAVITY= -0.004f;
-    private Armor m_armor;
+    protected static float MAX_MOVE_VELOCITY = 0.1f;
+    protected static float GRAVITY = -0.008f;
+    protected Armor m_armor;
 
-    public Player(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name, Weapon weapon, int life){
-        super(pos, mapConfig, spriteConfigFile, move, name, weapon, life);
+    public Player(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name, int life){
+        super(pos, mapConfig, spriteConfigFile, move, name, life);
+        m_enemies = Game.m_enemiesList;
     }
 
     public Player(Vector2 pos, TiledMapConfig mapConfig){
-        this(pos, mapConfig, Gdx.files.internal("img/sprite/player/config.json"), StateMove.Walking, "Player", new Arc(), 10);
+        this(pos, mapConfig, Gdx.files.internal("img/sprite/player/configNinja.json"), StateMove.Walking, "Player", 10);
     }
 
     @Override
-    public void render(float deltaTime, Batch toRender, TiledMapOrthographicCamera camera, TiledMapTileLayer collision){
-        this.update(collision);
+    public void render(float deltaTime, Batch toRender){
+        this.update(deltaTime);
         super.render(deltaTime, toRender);
-        m_weapon.update(m_position);
-        m_weapon.render(deltaTime, toRender, camera, collision);
+        m_arc.render(deltaTime, toRender, m_mapConfig.getCamera(), m_mapConfig.getCollisionLayer(), m_enemies);
+        m_sword.render(deltaTime, toRender, m_mapConfig.getCamera(), m_mapConfig.getCollisionLayer(), m_enemies);
     }
 
     @Override
-    public void update(TiledMapTileLayer collisionLayer){
+    public void update(float deltaTime){
+        super.update(deltaTime);
 
-        // weapon
-        if(m_weapon instanceof LongRange){
-            if(Gdx.input.isKeyPressed(Input.Keys.U)){
-                ((LongRange) m_weapon).upAngle();
-            }
-
-            if(Gdx.input.isKeyPressed(Input.Keys.I)){
-                ((LongRange) m_weapon).downAngle();
-            }
-        }
-
-
-        if(Gdx.input.isKeyPressed(Input.Keys.H))
-            m_weapon.hit();
-
-        //movement
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT) ||
-           Gdx.input.isKeyPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.D)){
-            if(m_isGrounded)
-                m_currentStateMove = StateMove.Walking;
-            m_isFacesRight = (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D));
-            m_moveVector.x = Player.MAX_VELOCITY *(m_isFacesRight ? 1 : -1);
-        }
+        //movement input
+        if(Gdx.input.isKeyPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.D))
+            this.walk(Gdx.input.isKeyPressed(Input.Keys.D));
         else{
             m_moveVector.x = 0;
             m_currentStateMove = StateMove.Standing;
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            this.jump();
+        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+            this.run();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && m_isGrounded){
+        if(!m_isGrounded)
             m_currentStateMove = StateMove.Jumping;
-            m_moveVector.y = Player.MAX_VELOCITY;
-            m_isGrounded = false;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-            if(m_isGrounded){
-                m_currentStateMove = StateMove.Running;
-                m_moveVector.scl(1.8f);
-            }
-        }
-
 
         m_moveVector.y += Player.GRAVITY;
 
-        //collision
-        Vector2 start = new Vector2(), end = new Vector2();
-        Rectangle tmpCollide;
+        this.processCollision();
+        if(m_isGrounded)
+            m_isDoubleJump = false;
 
-        end.x = start.x = m_position.x + m_moveVector.x;
-        if(m_moveVector.x >0)
-            end.x = (start.x += m_size.x);
-        start.y = m_position.y+0.2f;
-        end.y = start.y + m_size.y;
+        // weapon
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            this.hitSword();
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            this.throwBanana();
 
-        if(this.getTiledCollided(start, end, collisionLayer) == null)
-            m_position.x += m_moveVector.x;
+        //banana angle
+        if(Gdx.input.isKeyPressed(Input.Keys.UP))
+            m_arc.moveAngle(false);
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            m_arc.moveAngle(true);
 
-        start.x = m_position.x;
-        end.x = m_position.x + m_size.x;
-        start.y = end.y = m_position.y + m_moveVector.y;
-        if(m_moveVector.y > 0)
-            start.y = (end.y += m_size.y);
-
-        tmpCollide = this.getTiledCollided(start, end, collisionLayer);
-
-        if(tmpCollide != null){
-            if(m_moveVector.y > 0 ){
-                m_position.y = tmpCollide.y - m_size.y;
-            }
-            else{
-                m_position.y = tmpCollide.y + 1;
-                m_isGrounded = true;
-            }
-            m_moveVector.y = 0;
-        }
-
-        m_position.y += m_moveVector.y;
-        if(m_position.y<0) {
-            m_isGrounded = true;
-            m_position.y = 0;
-            m_life = 0;
-        }
-        if(m_position.x <0)
-            m_position.x = 0;
-
-//        if(m_isGrounded){
-//            if((int)m_moveVector.x == 0)
-//                m_currentStateMove = StateMove.Standing;
-//            else
-//                m_currentStateMove = StateMove.Walking;
-//        }
-//        else
-//            m_currentStateMove = StateMove.Jumping;
+        this.applyPersistMove();
     }
 }
