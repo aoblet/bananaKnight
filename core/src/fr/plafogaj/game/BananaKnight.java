@@ -22,7 +22,7 @@ import fr.plafogaj.screens.Splash;
 
 public class BananaKnight extends Game {
 	public static final String TITLE = "Banana Knight Game";
-	public static final int WIDTH = 1280, HEIGHT = 720;
+	public static final int WIDTH = 1280, HEIGHT = 600;
 
 	public SpriteBatch batch;
 	public BitmapFont font;
@@ -38,6 +38,7 @@ public class BananaKnight extends Game {
 	public void render () {
 		super.render();
 	}
+
 	@Override
 	public void dispose(){
 		batch.dispose();

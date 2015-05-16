@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
+  <image source="../../../../../Bureau/lol.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Calque de Tile 1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJACAMRcFs6Lq6gW5lNkgVRLji+GV4ZETEAOArM62H93c6+tv7qu3uq9Z/9QPwlwuq9UwG
+  </data>
+ </layer>
+ <layer name="Calque 2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1LcRwkAQQFFhc2yOzbE5Nsfm2A6gA+gAqACoAGiPn1wm0BmNov0zL9OeLrhZz/tdDHEkkEQK6T/f+1VCGRVUUUNdczaDLHLIo4Ci4f8baKKFNjroas663F3VQx8DDDHCWHPW5e6qCaaYYY4FlpqzLndXrbDGBlvssNecdbl7GLncPeoOOAZ8c8EVN4NzdXfACeeAs+544Gnw/zB2gOqFNz4GM2HsAJfC2AEu2e4Am7fml+0OsHlrftnuAJu3JkmSJEmSFEVfm7Umcg==
+  </data>
+ </layer>
+</map>
