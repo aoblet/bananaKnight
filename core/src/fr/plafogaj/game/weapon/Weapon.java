@@ -87,7 +87,7 @@ public abstract class Weapon {
     public void hit(TiledMapTileLayer collisionLayer){
         if(!(m_isUsable = m_elapsedTime_cadenceHit > m_minBreakTime_cadenceHit))
             return;
-        m_soundHit.play(0.5f);
+        m_soundHit.play(0.2f);
         m_elapsedTime_cadenceHit = 0;
     }
 
