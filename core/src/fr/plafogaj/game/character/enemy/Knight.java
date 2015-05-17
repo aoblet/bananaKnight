@@ -23,7 +23,7 @@ import fr.plafogaj.game.engine.TiledMapConfig;
 
 public class Knight extends Enemy{
     public Knight(Vector2 position, TiledMapConfig mapConfig, FileHandle spriteConfigFile, String name, int life, Player player) {
-        super(position, mapConfig, Gdx.files.internal("img/sprite/player/configNinja.json"), "Knight", 3, player);
+        super(position, mapConfig, Gdx.files.internal("img/sprite/player/configEnemy.json"), "Knight", 1, player);
     }
 
     public Knight(Vector2 position, TiledMapConfig mapConfig, Player player){
