@@ -106,7 +106,7 @@ public class MainMenu implements Screen{
 
     public void createImages(){
         m_texturesList = new LinkedList<Disposable>(Arrays.asList(
-            m_wallpaperTexture = new Texture(Gdx.files.internal("img/splash/wallpaper.jpg"))
+                m_wallpaperTexture = new Texture(Gdx.files.internal("img/mainMenu/mainMenu.png"))
         ));
         m_wallpaperImage = new Image(m_wallpaperTexture);
     }
@@ -126,6 +126,20 @@ public class MainMenu implements Screen{
             }
         });
 
+        m_level2Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new Game(Gdx.files.internal("level/2/configLevel.json")));
+            }
+        });
+
+        m_level3Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new Game(Gdx.files.internal("level/3/configLevel.json")));
+            }
+        });
+
         m_exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -133,7 +147,7 @@ public class MainMenu implements Screen{
                     Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            m_swordSound.play();
+                            m_swordSound.play(0.2f);
                         }
                     }),
                     Actions.moveTo(-BananaKnight.WIDTH/2, m_mainTable.getY(), 0.6f, Interpolation.swing),
@@ -197,11 +211,11 @@ public class MainMenu implements Screen{
     }
 
     public void playSounds(){
-        m_swordSound.play();
+        m_swordSound.play(0.2f);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                m_guillotineSound.play();
+                m_guillotineSound.play(0.5f);
             }
         }, 0.5f);
     }
