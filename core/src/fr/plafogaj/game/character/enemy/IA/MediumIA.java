@@ -18,10 +18,13 @@ package fr.plafogaj.game.character.enemy.IA;
 import com.badlogic.gdx.math.MathUtils;
 import fr.plafogaj.game.character.enemy.Enemy;
 import fr.plafogaj.game.character.player.Player;
+import fr.plafogaj.game.weapon.Weapon;
 
 public class MediumIA extends IA{
     public MediumIA(Player player, Enemy owner) {
         super(player, owner);
+        m_owner.getArc().setMinBreakTime_cadenceHit(m_owner.getArc().getMinBreakTime_cadenceHit()*1.5f);
+        m_owner.getSword().setMinBreakTime_cadenceHit(m_owner.getSword().getMinBreakTime_cadenceHit()*1.5f);
     }
 
     @Override
