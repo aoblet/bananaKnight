@@ -82,6 +82,7 @@ public abstract class Character {
 
     protected static float MAX_MOVE_VELOCITY = 0.1f;
     protected LinkedList<Character> m_enemies;
+    protected Rectangle m_rectangle;
 
 
     public Character(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name,
@@ -123,6 +124,7 @@ public abstract class Character {
 
         m_arc.setCharacter(this);
         m_sword.setCharacter(this);
+        m_rectangle = new Rectangle(0,0, m_size.x, m_size.y);
     }
 
     public void jump(){
@@ -243,11 +245,12 @@ public abstract class Character {
     }
 
     public Rectangle getRectangle(){
-        return new Rectangle(m_position.x, m_position.y, m_size.x, m_size.y);
+        return m_rectangle;
     }
 
     public void render(float deltaTime, Batch batchToRender){
         m_stateTime += deltaTime;
+        m_rectangle.setPosition(m_position.x, m_position.y);
         switch (m_currentStateMove){
             case Hitting:
                 m_currentFrameTexture = m_hitAnimation.getKeyFrame(m_stateTimeAnimationWeapon, true);
