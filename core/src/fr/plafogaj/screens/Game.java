@@ -15,9 +15,11 @@
 package fr.plafogaj.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,9 +29,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import fr.plafogaj.game.BananaKnight;
+import fr.plafogaj.game.artefact.Artifact;
+import fr.plafogaj.game.artefact.ArtifactLife;
 import fr.plafogaj.game.character.Character;
 import fr.plafogaj.game.character.enemy.Knight;
 import fr.plafogaj.game.character.player.Player;
@@ -37,7 +42,9 @@ import fr.plafogaj.game.engine.BananaAssetManager;
 import fr.plafogaj.game.engine.GameLevelConfig;
 import fr.plafogaj.game.engine.TiledMapConfig;
 import fr.plafogaj.game.engine.TiledMapOrthographicCamera;
+import fr.plafogaj.game.weapon.longRange.Arc;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
@@ -61,12 +68,20 @@ public class Game implements Screen, InputProcessor {
     public int timeLevel;
     protected Texture m_endTexture;
     protected Vector2 m_endTextureSize;
+    protected LinkedList<Arc> m_arcsTmp;
+    protected ArrayList<ArtifactLife> m_artifactsLife;
 
     public Game(FileHandle levelConfig){
         if(Game.ASSET_MANAGER == null){
             m_assetManager = new BananaAssetManager();
             Game.ASSET_MANAGER = m_assetManager;
         }
+        else
+            m_assetManager = ASSET_MANAGER;
+
+        m_arcsTmp = new LinkedList<Arc>();
+        m_artifactsLife = new ArrayList<ArtifactLife>();
+
         m_endTexture = m_assetManager.get("img/game/end.png");
         m_endTextureSize = new Vector2(m_endTexture.getWidth()*TiledMapConfig.TILE_UNIT_SCALE, m_endTexture.getHeight()*TiledMapConfig.TILE_UNIT_SCALE);
         m_gameLevelConfig = new GameLevelConfig(levelConfig);
@@ -74,7 +89,8 @@ public class Game implements Screen, InputProcessor {
 
         m_player = new Player(new Vector2(2,10), m_tiledMapConfig);
         m_playersList.add(m_player);
-//        this.initEnemies();
+        this.initEnemies();
+        this.initLifeArtifacts();
 
         m_mapRenderer = m_tiledMapConfig.getMapRenderer();
         gameBatch = m_mapRenderer.getBatch();
@@ -88,23 +104,45 @@ public class Game implements Screen, InputProcessor {
         timeLevel = 0;
     }
 
+    private void initLifeArtifacts(){
+        int nbArtifacts = 30;
+        Vector2 pos = new Vector2();
+        int widthMap = m_tiledMapConfig.getMap().getProperties().get("width", Integer.class);
+
+        for(int i=0; i<nbArtifacts; ++i){
+            pos.set(MathUtils.random(0,widthMap), MathUtils.random(0,30));
+            m_artifactsLife.add(new ArtifactLife(MathUtils.random(1,5), pos));
+        }
+    }
+
     private void initEnemies(){
         for(MapObject e : m_tiledMapConfig.getEnemiesObjects()){
             EllipseMapObject poly = (EllipseMapObject)e;
-            m_enemiesList.add(new Knight(new Vector2(poly.getEllipse().x*TiledMapConfig.TILE_UNIT_SCALE,
-                                                     poly.getEllipse().y*TiledMapConfig.TILE_UNIT_SCALE),
-                                                    m_tiledMapConfig, m_player));
-
+            m_enemiesList.add(new Knight(new Vector2(poly.getEllipse().x * TiledMapConfig.TILE_UNIT_SCALE,
+                    poly.getEllipse().y * TiledMapConfig.TILE_UNIT_SCALE),
+                    m_tiledMapConfig, m_player));
         }
 
     }
 
-    private void renderEnemies(float deltaTime, Batch toRender){
+    private void renderArcPersistent(float deltaTime){
+        for(Arc a: m_arcsTmp){
+            a.render(deltaTime, gameBatch, m_camera, m_tiledMapConfig.getCollisionLayer(), null);
+            if(a.getBullets().size() == 0)
+                m_arcsTmp.remove(a);
+        }
+    }
+
+    private void renderEnemies(float deltaTime){
+        //TODO: opti m_tiledMapConfig.getEnemiesLayerFake().setCell((int)m_enemiesList.get(i).getPosition().x, (int)m_enemiesList.get(i).getPosition().y, new TiledMapTileLayer.Cell());
         for(int i=0; i<m_enemiesList.size();++i){
-            m_enemiesList.get(i).render(deltaTime, toRender);
-//            m_tiledMapConfig.getEnemiesLayerFake().setCell((int)m_enemiesList.get(i).getPosition().x, (int)m_enemiesList.get(i).getPosition().y, new TiledMapTileLayer.Cell());
-            if(m_enemiesList.get(i).getLife() <= 0)
+            m_enemiesList.get(i).render(deltaTime, gameBatch);
+            if(m_enemiesList.get(i).getLife() <= 0){
+                if(m_enemiesList.get(i).getArc().getBullets().size() != 0)
+                    m_arcsTmp.add(m_enemiesList.get(i).getArc());
                 m_enemiesList.remove(i);
+                --i;
+            }
         }
     }
 
@@ -129,7 +167,7 @@ public class Game implements Screen, InputProcessor {
     }
 
     private void renderMiddleDecorParallax(){
-        m_mapRenderer.setView(m_camera.getParallaxCamera(.95f,1f));
+        m_mapRenderer.setView(m_camera.getParallaxCamera(.99f,1f));
         m_mapRenderer.render(TiledMapConfig.MIDDLE_LAYER);
     }
 
@@ -149,6 +187,25 @@ public class Game implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         Gdx.input.setCursorCatched(true);
         m_ambianceMusic.play();
+        ((Sound)(ASSET_MANAGER.get("sound/weapon/war.mp3"))).play();
+    }
+
+    private void renderEndObject(){
+        gameBatch.draw(m_endTexture, m_tiledMapConfig.getEndObjectCoord().x, m_tiledMapConfig.getEndObjectCoord().y,
+                m_endTextureSize.x, m_endTextureSize.y);
+    }
+
+    private void renderLifeArtifacts(){
+        Artifact a; // need for int i loop, otherwise ConcurrentModificationException...
+        for(int i=0; i<m_artifactsLife.size();++i ){
+            a = m_artifactsLife.get(i);
+            a.render(gameBatch);
+            if(a.isOverlapped(m_player.getRectangle())){
+                a.processOnCharacter(m_player);
+                m_artifactsLife.remove(i);
+                --i;
+            }
+        }
     }
 
     @Override
@@ -156,18 +213,22 @@ public class Game implements Screen, InputProcessor {
         // clear the screen
         Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
         this.renderBGDecorParallax();
         this.renderMiddleDecorParallax();
+
         m_mapRenderer.setView(m_camera);
         m_mapRenderer.render(TiledMapConfig.COLLISION_LAYER);
+
         gameBatch.begin();
         m_player.render(delta, gameBatch);
-        this.renderEnemies(delta, gameBatch);
-        this.renderEndObject(gameBatch);
+        this.renderEnemies(delta);
+        this.renderLifeArtifacts();
+        this.renderEndObject();
+        this.renderArcPersistent(delta);
         gameBatch.end();
 
         this.renderFGDecorParallax();
-
         this.drawInfoPlayer();
         m_camera.updateScrolling(m_player);
 
@@ -175,18 +236,12 @@ public class Game implements Screen, InputProcessor {
             ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new EndMenu(m_gameLevelConfig.getLevelFile(), m_player.isAlive()));
             this.dispose();
         }
-
-    }
-
-    private void renderEndObject(Batch toRender){
-        toRender.draw(m_endTexture, m_tiledMapConfig.getEndObjectCoord().x, m_tiledMapConfig.getEndObjectCoord().y,
-                      m_endTextureSize.x, m_endTextureSize.y);
     }
 
     private void drawInfoPlayer(){
         screenBatch.begin();
         font.draw(screenBatch, "Life: " + m_player.getLife(), 0, BananaKnight.HEIGHT);
-        font.draw(screenBatch, "Enemies: " + m_enemiesList.size(), 0, BananaKnight.HEIGHT-10);
+        font.draw(screenBatch, "Enemies: " + m_enemiesList.size(), 0, BananaKnight.HEIGHT-15);
         screenBatch.end();
     }
 
@@ -206,14 +261,14 @@ public class Game implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-        m_ambianceMusic.pause();
+        m_ambianceMusic.stop();
+        ((Sound)(ASSET_MANAGER.get("sound/weapon/war.mp3"))).play();
         this.dispose();
     }
 
     @Override
     public void dispose() {
         font.dispose();
-        m_ambianceMusic.dispose();
         m_tiledMapConfig.getMap().dispose();
         m_player.dispose();
         for(Character e: m_enemiesList)
@@ -223,7 +278,18 @@ public class Game implements Screen, InputProcessor {
     }
 
     @Override
+    public void finalize(){
+        m_assetManager.dispose();
+        m_assetManager = null;
+    }
+
+    @Override
     public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.ESCAPE){
+            ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new MainMenu());
+            this.dispose();
+            return true;
+        }
         return false;
     }
 

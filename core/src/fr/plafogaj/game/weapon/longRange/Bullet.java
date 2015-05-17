@@ -79,8 +79,8 @@ public class Bullet {
     }
 
     public boolean isInScreen(TiledMapOrthographicCamera camera){
-        float viewportWidthHalf = camera.viewportWidth/2f;
-        float viewportHeightHalf = camera.viewportHeight/2f;
+        float viewportWidthHalf = camera.viewportWidth/2f +10; //margin tolerance
+        float viewportHeightHalf = camera.viewportHeight/2f +10;
 
         if(m_position.x + m_size.x < camera.position.x - viewportWidthHalf || m_position.x > camera.position.x + viewportWidthHalf ||
            m_position.y > camera.position.y + viewportHeightHalf || m_position.y + m_size.y < camera.position.y - viewportHeightHalf)
