@@ -1,0 +1,5 @@
+{
+  //absolute path (root=assets)
+  "mapTmxFile": "level/1/level.tmx",
+  "configGameFile": "level/1/configGame.json"
+}

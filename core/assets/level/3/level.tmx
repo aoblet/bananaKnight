@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" nextobjectid="34">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" nextobjectid="52">
  <tileset firstgid="1" name="medie" tilewidth="32" tileheight="32">
   <image source="../../map/tileset/medieval.png" width="256" height="2336"/>
  </tileset>
@@ -62,7 +62,7 @@
  </layer>
  <layer name="collisionLayer" width="400" height="100">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt3bmO5EQAxvGW+ylYnggkkEACCSR4Aa6AS5AtGWS7QMAVcCYcCUfCERISEpJBxvEIVGtkjae2yvXVZZer/j/J6mmP+5Drmzrd06cTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAenLnfDrdNdvbZnvHbO+ey+/D8ZALKMgJbO+ZMnvfbB+Y7UOzfXTW96Ff5AIKcjK2j005fmK2T832mdk+P+v70C9yAQU5gY1xJVzIBRTkZGyMNeFCLqAgJ2NjrAkXcgEFORkb40+4kAsoyMnYGH/ChVxAQU7GxvgTLuQCCnIyNsafcCEXUJCTPjwwnU4PTte3qtzxZ+rrYhvkAgpyMrYnzLl/crq+VeWOP1NfF9sgF1CQE6S04SXGn/Qd2kYuoCAnY0tpw0tcP0HfoW3kAgpyglhcPwEXcgEFOcF9psxvme1+yh4L5AIKcjIurr+DC7mAgpyMjc+PwoVcQEFOxsb8JVzIBRTkpH3PmDJ51mzPme15s71wvtq3/Nn1e3tfzndNqq+h7kM+cgEFORnbi+Z8vWS2l832itlePV/tW/7s+r29L+f7J9XXUPchH7mAgpygBL5/Ei7kAgpyAhvXT8CFXEBBTsbG9RNwIRdQkJOxMdaEC7mAIjUnr02n0+sH/p8lfGbyCuNPuJALKFJzctu0HW8cuP24uMXfBONPOPWUi6P3dVum5mQugzfN9tZ07337uD3lXKc8Wr+LeQq49JSLHvq6rVJzMpfBHbPdne69bx+3p5zrlHvqdylGay+h6SEXob5uT1L77bn9/VBOfGUw318bl+wl5zrlnvpditHaS2hK5WLP7wYK9XV7ktpvz+3vh3LiK4P5/tq4pAW+9vGy9jFva8e1pvT3BddoL/lO4+21motHzHt5dKrzHlUtzKnXEjvGsssgd2zWe/3hax/t66+O0g9Xvi845rzXaDf5TuPtlT7npXKxfD975aKFOfVaYsdYdhnkjs1arj9KtEO+9tEefxxp3ip0PmLOe612s4W+w2hKnvOectFz+zGLGWMtyyB3bBbKiW99w/69fdz8HnPWrOax73IMXMJR5qp8SvbfarWbjD22N2oufHVSaO3W9/gjimkjl2WQ27aGcuJb37B/bx83v8ecNata492jzFVthc9SwuUoufDVSaG1W9/jEceVE7XtXjuuhBrj3SPNVdV29LEY6jhCLkJ1VOp96Hw5UdvuteNKKD139bB5rocm923ralyXsMdYbK9r1aFby0Ura1uhOir1PnTq+sfMbqN945JSSs9dPW6e67HJfdu6GvN5e4zF9rpWHbq1XJTu0+UKrcmq+xFPXf/w8Y1LWvW0eY9PTe7bnmzx/ZOxUucLmGcop8Vc5Aqtyar7ca3HnJRw5PmrGFt8/2Ss1PkC5hnKaTEXpbHOkW+EnKQ48vxVDFd7n/M/XEr2H1j/2E/LuSil53UO399A7P6QEXKSYpT5K7W9V6+zie0/rOV2bb4g9XEjyalDcnLhWn9ruV9pr3f00P/w/Q3E7g/Zu/5ohS9Dy1vf71KvM1EeFzomd4yttvfq9Vex/QfWyOvJqUNK5GKZ3Zr9ytz63l7vOHK2fHNwsfvVc7p3/VGbei2rL0PLW9/vUq9zUh4XOiZ3jK229+r1V+rz2eWilhNz1GEl6pASuVhef1UzF7n1fU+Z8s3Bxe5Xz+nR6o9Ysf/bZM7Q2vzVVuNb5Zwss55yTpX2/otJG39ejlP7D/Ych3rNcU9z1LXY5yiUC9c5VctxLRfLsqyRi1L1fo+ZSpm7rFV/XKjzV7Xrj9j3E/u8c4bWrr/aanyrvPdl1lPOqdLefzNp48/LcTHzl3Mu5zzH9B16mKOubT5Hai5Sxh/qvERKLnz3Z6Xr/Z4ylTJ3Wav+uNgzJznvJ8UlQ2vXX7WUMXsOIvacKu39D5M2/rwcFzN/OedyznPMPGBOGz7KdV3Lc7TMwW1PnzJl/KHOS6TkwnffVqpcjrzuUYr9fR8l6o+LFnKS8n5SXDK0Nn/VUsbseczYc/qlOW9fme3r882fl36ZtPGe8lwtGHHNvkYuLlrIxZHLpYSS6zVzLtS13SPlJPb9xAh9XrDVzxP6/k+M6ltz3r4z2/fnmz8v/Tpp4z3lufbE59p1aln2kIujq7Feo2b+qDkpPX8V+rxgq58ntLMTm6UfzXn7yWw/n2/+vPTbpI33lOfaE59r1/nK0q5DesjFUdlz1yWpmVfLtrWclJ6/Cn1esNXPE9oZis2UMmb83TN/Zb+G77la66uPsv6Rw1eWdh3S2rzESOy56xpCn6k82vyV7zVKv94W81Ul+g12hmIzpYwZ//DMX9mv4Xuu1vrqI65/xPKVpV2HtDYvMZKa449Z6DOVy3r3CPNXvtco/XpbzFeV6Df4MqRmK9QG/2ke+5dn/mr53Jfj1uY8Rlgz6ImvLO06pLV5iZFsMf4IrYMs6921PrySky3GH74sls7lFvNVNcYfof22UBv8t3nsP2b712z/Tf7nvhy3NucxwppBT3xlmXL9APNXxxVaB1nWu7l9eMapcVqoU0u2wZR/P0qWJbnw+x/ND+Gr
   </data>
  </layer>
  <layer name="middle" width="400" height="100">
@@ -77,98 +77,122 @@
  </layer>
  <objectgroup name="objects">
   <object id="1" name="playerStart" type="p" x="400" y="2762" width="164" height="133"/>
-  <object id="2" x="6479" y="2112" width="44" height="97">
+  <object id="2" x="6556.33" y="3032" width="44" height="97">
    <ellipse/>
   </object>
  </objectgroup>
  <objectgroup color="#dec498" name="enemies">
-  <object id="3" x="1344" y="2687" width="63" height="55">
+  <object id="3" x="1513.33" y="3100.33" width="63" height="55">
    <ellipse/>
   </object>
-  <object id="4" x="809" y="2573" width="48" height="74">
-   <ellipse/>
-  </object>
-  <object id="5" x="901" y="2727" width="81" height="112">
+  <object id="4" x="1897" y="3085" width="48" height="74">
    <ellipse/>
   </object>
   <object id="6" x="1671" y="3080" width="93" height="100">
    <ellipse/>
   </object>
-  <object id="7" x="2067" y="2237" width="86" height="80">
+  <object id="7" x="2300.33" y="2135.67" width="86" height="80">
    <ellipse/>
   </object>
-  <object id="8" x="2703" y="2762" width="73" height="87">
+  <object id="10" x="2643.67" y="2410.33" width="37" height="50">
    <ellipse/>
   </object>
-  <object id="9" x="2321" y="2926" width="41" height="62">
+  <object id="12" x="1340.33" y="2259" width="81" height="87">
    <ellipse/>
   </object>
-  <object id="10" x="2413" y="2953" width="37" height="50">
+  <object id="13" x="4020" y="2638.33" width="97" height="124">
    <ellipse/>
   </object>
-  <object id="11" x="2085" y="2927" width="51" height="49">
+  <object id="14" x="4029" y="2164.33" width="73" height="97">
    <ellipse/>
   </object>
-  <object id="12" x="1295" y="2243" width="81" height="87">
+  <object id="15" x="5752.94" y="2481.82" width="76" height="109">
    <ellipse/>
   </object>
-  <object id="13" x="3160" y="2833" width="97" height="124">
+  <object id="16" x="6630.67" y="2664" width="101" height="79">
    <ellipse/>
   </object>
-  <object id="14" x="3845" y="2807" width="73" height="97">
+  <object id="19" x="3670" y="2196" width="73" height="99">
    <ellipse/>
   </object>
-  <object id="15" x="5759" y="2600" width="76" height="109">
+  <object id="20" x="3860" y="2119" width="75" height="103">
    <ellipse/>
   </object>
-  <object id="16" x="6276" y="2496" width="101" height="79">
-   <ellipse/>
-  </object>
-  <object id="19" x="3718" y="2568" width="73" height="99">
-   <ellipse/>
-  </object>
-  <object id="20" x="4268" y="2547" width="75" height="103">
-   <ellipse/>
-  </object>
-  <object id="21" x="7636.36" y="1254.55" width="124.242" height="175.758">
-   <ellipse/>
-  </object>
-  <object id="22" x="7445.45" y="1915.15" width="106.061" height="142.424">
-   <ellipse/>
-  </object>
-  <object id="23" x="7203.03" y="1606.06" width="84.8485" height="148.485">
-   <ellipse/>
-  </object>
-  <object id="24" x="8133.33" y="1654.55" width="100" height="136.364">
+  <object id="21" x="8775.76" y="2948.48" width="124.242" height="175.758">
    <ellipse/>
   </object>
   <object id="25" x="8293.94" y="2275.76" width="100" height="136.364">
    <ellipse/>
   </object>
-  <object id="26" x="7003.03" y="2296.97" width="87.8788" height="127.273">
+  <object id="26" x="6871.03" y="2410.3" width="87.8788" height="127.273">
    <ellipse/>
   </object>
-  <object id="27" x="7375.76" y="2442.42" width="115.152" height="181.818">
-   <ellipse/>
-  </object>
-  <object id="28" x="7912.12" y="1906.06" width="96.9697" height="166.667">
+  <object id="27" x="7589.09" y="2717.09" width="115.152" height="181.818">
    <ellipse/>
   </object>
   <object id="29" x="8296.97" y="2709.09" width="106.061" height="136.364">
    <ellipse/>
   </object>
-  <object id="30" x="6903.03" y="2730.3" width="109.091" height="112.121">
+  <object id="30" x="7259.03" y="3026.3" width="109.091" height="112.121">
    <ellipse/>
   </object>
-  <object id="31" x="10327.3" y="2878.79" width="127.273" height="178.788">
+  <object id="31" x="11563.6" y="2254.55" width="127.273" height="178.788">
    <ellipse/>
   </object>
-  <object id="32" x="11187.9" y="2821.21" width="218.182" height="272.727">
+  <object id="32" x="10836.4" y="2848.48" width="218.182" height="272.727">
+   <ellipse/>
+  </object>
+  <object id="34" x="3680.83" y="2644.67" width="97" height="124">
+   <ellipse/>
+  </object>
+  <object id="35" x="3644" y="2881.33" width="48" height="74.6667">
+   <ellipse/>
+  </object>
+  <object id="36" x="4082.67" y="2894.67" width="33.3333" height="65.3333">
+   <ellipse/>
+  </object>
+  <object id="37" x="4281.33" y="2885.33" width="64" height="128">
+   <ellipse/>
+  </object>
+  <object id="39" x="3392" y="3029.33" width="73.3333" height="113.333">
+   <ellipse/>
+  </object>
+  <object id="40" x="4740" y="3017.33" width="106.667" height="137.333">
+   <ellipse/>
+  </object>
+  <object id="42" x="12475.8" y="2783.33" width="127.273" height="178.788">
+   <ellipse/>
+  </object>
+  <object id="43" x="1760.61" y="1215.15" width="154.545" height="169.697">
+   <ellipse/>
+  </object>
+  <object id="44" x="1166.67" y="1815.15" width="109.091" height="196.97">
+   <ellipse/>
+  </object>
+  <object id="45" x="2084.85" y="1760.61" width="115.152" height="233.333">
+   <ellipse/>
+  </object>
+  <object id="46" x="5645.45" y="1178.79" width="109.091" height="193.939">
+   <ellipse/>
+  </object>
+  <object id="47" x="5212.12" y="1830.3" width="130.303" height="178.788">
+   <ellipse/>
+  </object>
+  <object id="48" x="10160.6" y="1169.7" width="148.485" height="239.394">
+   <ellipse/>
+  </object>
+  <object id="49" x="10530.3" y="1836.36" width="84.8485" height="124.242">
+   <ellipse/>
+  </object>
+  <object id="50" x="10800" y="1630.3" width="63.6364" height="93.9394">
+   <ellipse/>
+  </object>
+  <object id="51" x="10936.4" y="1872.73" width="133.333" height="139.394">
    <ellipse/>
   </object>
  </objectgroup>
  <objectgroup name="end">
-  <object id="17" x="10777.8" y="2584.76" width="137" height="224">
+  <object id="41" x="11800" y="1963.64" width="175.758" height="263.636">
    <ellipse/>
   </object>
  </objectgroup>
