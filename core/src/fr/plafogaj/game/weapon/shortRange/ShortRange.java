@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import fr.plafogaj.game.character.Character;
 import fr.plafogaj.game.character.enemy.Enemy;
 import fr.plafogaj.game.character.player.Player;
@@ -40,6 +41,7 @@ public abstract class ShortRange extends Weapon {
         m_size.y = TiledMapConfig.TILE_UNIT_SCALE;
         m_isHitting = false;
         m_stateTimeAnimation = 0;
+        m_soundHitTarget = Game.ASSET_MANAGER.get("sound/weapon/sword_hit.mp3");
     }
 
     @Override
@@ -64,15 +66,17 @@ public abstract class ShortRange extends Weapon {
         if(collisionLayer.getCell(xCell, yCell) != null){
             collisionLayer.setCell(xCell,yCell, null);
         }
-        Character enemyHit = null;
-        Vector2 positionComputed = m_position.cpy().add(m_character.getSize().x,0);
-        if(!m_character.isFacesRight())
-            positionComputed.add(-m_character.getSize().x,0);
+        Vector2 sizeComputed = m_character.getSize().cpy().add(m_character.getSize().x/2f, 0);
+        Character enemyHit = this.getCharacterHit(m_character.getEnemies(), m_character.getPosition().cpy(), sizeComputed);
 
-        enemyHit=this.getCharacterHit(m_character.getEnemies(), positionComputed, m_size);
         if(enemyHit != null){
             enemyHit.impactLife(m_force);
-            m_soundHitTarget.play();
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    m_soundHitTarget.play();
+                }
+            }, 0.05f);
         }
     }
 
