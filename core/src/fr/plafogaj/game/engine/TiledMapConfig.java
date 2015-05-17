@@ -78,7 +78,7 @@ public class TiledMapConfig{
         m_mapRenderer= new OrthogonalTiledMapRenderer(m_map, TILE_UNIT_SCALE);
 
         m_camera = new TiledMapOrthographicCamera();
-        m_camera.setToOrtho(false, 40, 20);
+        m_camera.setToOrtho(false, 45, 25);
         m_camera.update();
     }
 
