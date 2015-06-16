@@ -55,6 +55,8 @@ public abstract class Weapon {
     /** The size of the weapon */
     protected Vector2 m_size;
 
+    protected int m_hitCpt;
+
     public Weapon(Character c, Sound soundToPlay, FileHandle fileTexture, TiledMapConfig mapConfig){
         m_position = c != null ? c.getPosition() : new Vector2(0,0);
         m_character = c;
@@ -67,6 +69,7 @@ public abstract class Weapon {
         m_textureRegion = new TextureRegion(m_texture);
         m_mapConfig = mapConfig;
         m_force = 1;
+        m_hitCpt = 0;
     }
 
     /**
@@ -89,6 +92,7 @@ public abstract class Weapon {
             return;
         m_soundHit.play(0.2f);
         m_elapsedTime_cadenceHit = 0;
+        m_hitCpt+=1;
     }
 
     public Vector2 getPosition() {
@@ -133,6 +137,10 @@ public abstract class Weapon {
                 return e;
         }
         return null;
+    }
+
+    public int getHitCpt() {
+        return m_hitCpt;
     }
 
     /** Free resources */

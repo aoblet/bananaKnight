@@ -49,8 +49,11 @@ import java.util.LinkedList;
 
 
 public class Game implements Screen, InputProcessor {
-    public static LinkedList<Character> m_enemiesList = new LinkedList<Character>();
-    public static LinkedList<Character> m_playersList= new LinkedList<Character>();
+    protected BananaAssetManager m_assetManager;
+    public static BananaAssetManager ASSET_MANAGER;
+
+    protected LinkedList<Character> m_enemiesList;
+    protected LinkedList<Character> m_playersList;
 
     private Music m_ambianceMusic;
     private Player m_player;
@@ -59,19 +62,18 @@ public class Game implements Screen, InputProcessor {
     private TiledMapOrthographicCamera m_camera;
     private OrthogonalTiledMapRenderer m_mapRenderer;
 
-    protected BananaAssetManager m_assetManager;
-    public static BananaAssetManager ASSET_MANAGER;
-
     public Batch gameBatch;
     public BitmapFont font;
     public Batch screenBatch;
-    public int timeLevel;
+    public float timeLevel;
     protected Texture m_endTexture;
     protected Vector2 m_endTextureSize;
     protected LinkedList<Arc> m_arcsTmp;
     protected ArrayList<ArtifactLife> m_artifactsLife;
+    protected String m_timeFormatted;
 
     public Game(FileHandle levelConfig){
+        //singleton
         if(Game.ASSET_MANAGER == null){
             m_assetManager = new BananaAssetManager();
             Game.ASSET_MANAGER = m_assetManager;
@@ -79,18 +81,23 @@ public class Game implements Screen, InputProcessor {
         else
             m_assetManager = ASSET_MANAGER;
 
-        m_arcsTmp = new LinkedList<Arc>();
-        m_artifactsLife = new ArrayList<ArtifactLife>();
-
         m_endTexture = m_assetManager.get("img/game/end.png");
         m_endTextureSize = new Vector2(m_endTexture.getWidth()*TiledMapConfig.TILE_UNIT_SCALE, m_endTexture.getHeight()*TiledMapConfig.TILE_UNIT_SCALE);
         m_gameLevelConfig = new GameLevelConfig(levelConfig);
         m_tiledMapConfig = m_gameLevelConfig.getTileMapConfig();
 
+        m_playersList = new LinkedList<Character>();
+        m_enemiesList = new LinkedList<Character>();
+        m_artifactsLife = new ArrayList<ArtifactLife>();
+        m_arcsTmp = new LinkedList<Arc>(); //when an enemy dies and have shot bananas
+
         m_player = new Player(new Vector2(2,10), m_tiledMapConfig);
         m_playersList.add(m_player);
+
         this.initEnemies();
         this.initLifeArtifacts();
+
+        m_player.setEnemies(m_enemiesList);
 
         m_mapRenderer = m_tiledMapConfig.getMapRenderer();
         gameBatch = m_mapRenderer.getBatch();
@@ -101,7 +108,9 @@ public class Game implements Screen, InputProcessor {
         font = new BitmapFont();
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         screenBatch = new SpriteBatch();
+
         timeLevel = 0;
+        m_timeFormatted = "";
     }
 
     private void initLifeArtifacts(){
@@ -120,7 +129,7 @@ public class Game implements Screen, InputProcessor {
             EllipseMapObject poly = (EllipseMapObject)e;
             m_enemiesList.add(new Knight(new Vector2(poly.getEllipse().x * TiledMapConfig.TILE_UNIT_SCALE,
                     poly.getEllipse().y * TiledMapConfig.TILE_UNIT_SCALE),
-                    m_tiledMapConfig, m_player));
+                    m_tiledMapConfig, m_playersList));
         }
 
     }
@@ -136,13 +145,15 @@ public class Game implements Screen, InputProcessor {
     private void renderEnemies(float deltaTime){
         //TODO: opti m_tiledMapConfig.getEnemiesLayerFake().setCell((int)m_enemiesList.get(i).getPosition().x, (int)m_enemiesList.get(i).getPosition().y, new TiledMapTileLayer.Cell());
         for(int i=0; i<m_enemiesList.size();++i){
-            m_enemiesList.get(i).render(deltaTime, gameBatch);
-            if(m_enemiesList.get(i).getLife() <= 0){
-                if(m_enemiesList.get(i).getArc().getBullets().size() != 0)
-                    m_arcsTmp.add(m_enemiesList.get(i).getArc());
-                m_enemiesList.remove(i);
-                --i;
-            }
+            //if(m_enemiesList.get(i).isInScreen(m_camera)) {
+                m_enemiesList.get(i).render(deltaTime, gameBatch);
+                if(m_enemiesList.get(i).getLife() <= 0){
+                    if(m_enemiesList.get(i).getArc().getBullets().size() != 0)
+                        m_arcsTmp.add(m_enemiesList.get(i).getArc());
+                    m_enemiesList.remove(i);
+                    --i;
+                }
+            //}
         }
     }
 
@@ -187,7 +198,6 @@ public class Game implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         Gdx.input.setCursorCatched(true);
         m_ambianceMusic.play();
-        ((Sound)(ASSET_MANAGER.get("sound/weapon/war.mp3"))).play();
     }
 
     private void renderEndObject(){
@@ -210,6 +220,8 @@ public class Game implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
+        timeLevel += delta;
+
         // clear the screen
         Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -232,8 +244,10 @@ public class Game implements Screen, InputProcessor {
         this.drawInfoPlayer();
         m_camera.updateScrolling(m_player);
 
+        this.updateTimeFormatted();
+
         if(this.isEndGame()){
-            ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new EndMenu(m_gameLevelConfig.getLevelFile(), m_player.isAlive()));
+            ((BananaKnight) (Gdx.app.getApplicationListener())).setScreen(new EndMenu(m_gameLevelConfig.getLevelFile(), m_player.isAlive(), m_timeFormatted));
             this.dispose();
         }
     }
@@ -242,6 +256,9 @@ public class Game implements Screen, InputProcessor {
         screenBatch.begin();
         font.draw(screenBatch, "Life: " + m_player.getLife(), 0, BananaKnight.HEIGHT);
         font.draw(screenBatch, "Enemies: " + m_enemiesList.size(), 0, BananaKnight.HEIGHT-15);
+        font.draw(screenBatch, "Time: " + m_timeFormatted, 0, BananaKnight.HEIGHT-45);
+        font.draw(screenBatch, "Banana thrown: " + m_player.getArc().getHitCpt(), 0, BananaKnight.HEIGHT-60);
+        font.draw(screenBatch, "Sword hit: " + m_player.getSword().getHitCpt(), 0, BananaKnight.HEIGHT-75);
         screenBatch.end();
     }
 
@@ -262,8 +279,14 @@ public class Game implements Screen, InputProcessor {
     @Override
     public void hide() {
         m_ambianceMusic.stop();
-        ((Sound)(ASSET_MANAGER.get("sound/weapon/war.mp3"))).play();
         this.dispose();
+    }
+
+    public void updateTimeFormatted(){
+        if(timeLevel < 60 )
+            m_timeFormatted = (int) (timeLevel) + " s";
+        else if(timeLevel <60*60)
+            m_timeFormatted = (int)(timeLevel/60)+":"+(int)(timeLevel)%60;
     }
 
     @Override

@@ -41,8 +41,9 @@ public class EndMenu implements Screen {
     private Music m_music;
     private FileHandle m_levelFile;
     private boolean m_success;
+    private String m_timeLevel;
 
-    public EndMenu(FileHandle levelFile, boolean success){
+    public EndMenu(FileHandle levelFile, boolean success, String timeLevel){
         m_wallpaperTexture = new Texture(Gdx.files.internal("map/decor/background.png"));
         m_wallpaperImage = new Image(m_wallpaperTexture);
         m_levelFile = levelFile;
@@ -50,6 +51,7 @@ public class EndMenu implements Screen {
         m_mainTable = new VisTable();
         m_menuButton = new VisTextButton("Back to menu");
         m_playAgainButton = new VisTextButton("Try again!");
+        m_timeLevel = timeLevel;
 
         m_music = Game.ASSET_MANAGER.get("music/end.mp3");
 
@@ -57,6 +59,7 @@ public class EndMenu implements Screen {
             m_message = new VisTextButton("Congrats! You've beaten the ninja empire III of Copernic");
         else
             m_message = new VisTextButton("You fail, you need more practice");
+        m_message.setText(m_message.getText()+"\nTime level: "+m_timeLevel);
 
         m_mainTable.add(m_message).size(m_message.getWidth()+100, 60).center().padBottom(30).padLeft(60).padRight(40).row();
         m_mainTable.add(m_playAgainButton).size(300, 60).padBottom(10).padLeft(10).row();
