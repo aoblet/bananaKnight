@@ -29,6 +29,8 @@ import fr.plafogaj.game.character.player.Player;
 import fr.plafogaj.game.engine.TiledMapConfig;
 import fr.plafogaj.screens.Game;
 
+import java.util.LinkedList;
+
 public abstract class Enemy extends Character{
     protected IA m_IA_module;
 
@@ -41,13 +43,12 @@ public abstract class Enemy extends Character{
     protected boolean m_isTerminatorMode;
 
     public Enemy(Vector2 position, TiledMapConfig mapConfig, FileHandle spriteConfigFile, String name, int life,
-                 Player player){
-        super(position, mapConfig, spriteConfigFile, StateMove.Standing, name, life);
-        m_enemies = Game.m_playersList;
+                 LinkedList<Character> players){
+        super(position, mapConfig, spriteConfigFile, StateMove.Standing, name, life, players);
 
         max_move_velocity = MathUtils.random(0.05f, 0.1f);
         m_soundAttack = Game.ASSET_MANAGER.get("sound/player/attack.mp3");
-        m_IA_module = new MediumIA(player, this);
+        m_IA_module = new MediumIA(players, this);
         m_isDiscoverPlayer = false;
         m_isTerminatorMode = false;
     }

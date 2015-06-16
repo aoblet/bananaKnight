@@ -30,6 +30,7 @@ import fr.plafogaj.game.engine.TiledMapOrthographicCamera;
 import fr.plafogaj.game.weapon.longRange.Arc;
 import fr.plafogaj.screens.Game;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 public class Player extends Character{
@@ -37,13 +38,12 @@ public class Player extends Character{
     protected static float GRAVITY = -0.008f;
     protected Armor m_armor;
 
-    public Player(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name, int life){
-        super(pos, mapConfig, spriteConfigFile, move, name, life);
-        m_enemies = Game.m_enemiesList;
+    public Player(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name, int life, LinkedList enemies){
+        super(pos, mapConfig, spriteConfigFile, move, name, life, enemies);
     }
 
     public Player(Vector2 pos, TiledMapConfig mapConfig){
-        this(pos, mapConfig, Gdx.files.internal("img/sprite/player/configNinja.json"), StateMove.Walking, "Player", 10);
+        this(pos, mapConfig, Gdx.files.internal("img/sprite/player/configNinja.json"), StateMove.Walking, "Player", 10, null);
     }
 
     @Override

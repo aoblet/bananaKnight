@@ -18,15 +18,17 @@ package fr.plafogaj.game.character.enemy;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import fr.plafogaj.game.character.player.Player;
+import fr.plafogaj.game.character.Character;
 import fr.plafogaj.game.engine.TiledMapConfig;
 
+import java.util.LinkedList;
+
 public class Knight extends Enemy{
-    public Knight(Vector2 position, TiledMapConfig mapConfig, FileHandle spriteConfigFile, String name, int life, Player player) {
-        super(position, mapConfig, Gdx.files.internal("img/sprite/player/configEnemy.json"), "Knight", 1, player);
+    public Knight(Vector2 position, TiledMapConfig mapConfig, FileHandle spriteConfigFile, String name, int life, LinkedList players) {
+        super(position, mapConfig, Gdx.files.internal("img/sprite/player/configEnemy.json"), "Knight", 2, players);
     }
 
-    public Knight(Vector2 position, TiledMapConfig mapConfig, Player player){
-        this(position, mapConfig, null, "",0,player);
+    public Knight(Vector2 position, TiledMapConfig mapConfig, LinkedList<Character> players){
+        this(position, mapConfig, null, "",0,players);
     }
 }

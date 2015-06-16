@@ -16,13 +16,17 @@
 package fr.plafogaj.game.character.enemy.IA;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Timer;
+import fr.plafogaj.game.character.Character;
 import fr.plafogaj.game.character.enemy.Enemy;
 import fr.plafogaj.game.character.player.Player;
 import fr.plafogaj.game.weapon.Weapon;
 
+import java.util.LinkedList;
+
 public class MediumIA extends IA{
-    public MediumIA(Player player, Enemy owner) {
-        super(player, owner);
+    public MediumIA(LinkedList<Character> players, Enemy owner) {
+        super(players, owner);
         m_owner.getArc().setMinBreakTime_cadenceHit(m_owner.getArc().getMinBreakTime_cadenceHit()*1.5f);
         m_owner.getSword().setMinBreakTime_cadenceHit(m_owner.getSword().getMinBreakTime_cadenceHit()*1.5f);
     }
@@ -35,18 +39,29 @@ public class MediumIA extends IA{
         m_distancePlayerPoint.x *= m_distancePlayerPoint.x < 0 ? -1 : 1;
         m_distancePlayerPoint.y *= m_distancePlayerPoint.y < 0 ? -1 : 1;
 
+        if(m_owner.isGrounded())
+            m_owner.setIsDoubleJump(false);
+
+        if(m_owner.isCollidedX()){
+            if(m_owner.isDoubleJump())
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        m_owner.jump();
+                    }
+                },0.3f);
+            else
+                m_owner.jump();
+        }
+
         if(m_owner.isTerminatorMode())
             this.attack();
-        else if(m_distancePlayerPoint.x > 30 || m_distancePlayerPoint.y > 20)
+        else if(m_distancePlayerPoint.x > 40 || m_distancePlayerPoint.y > 30)
             return;
-        else if(m_distancePlayerPoint.x > 13 || m_distancePlayerPoint.y > 10)
+        else if(m_distancePlayerPoint.x > 20 || m_distancePlayerPoint.y > 20)
             this.sentinel();
         else
             this.attack();
-
-        if(m_owner.isCollidedX()){
-            m_owner.jump();
-        }
     }
 
     @Override
@@ -79,7 +94,7 @@ public class MediumIA extends IA{
         else
             m_owner.throwBanana();
 
-        if(m_owner.getPosition().y < m_player.getPosition().y - 2)
+        if(m_owner.getPosition().y < m_player.getPosition().y - 5)
             m_owner.jump();
     }
 

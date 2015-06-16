@@ -19,6 +19,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,6 +34,7 @@ import fr.plafogaj.game.weapon.longRange.Arc;
 import fr.plafogaj.game.weapon.shortRange.Sword;
 import fr.plafogaj.screens.Game;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 public abstract class Character {
@@ -86,7 +88,7 @@ public abstract class Character {
 
 
     public Character(Vector2 pos, TiledMapConfig mapConfig, FileHandle spriteConfigFile, StateMove move, String name,
-                     int life){
+                     int life, LinkedList<Character> enemies){
         m_mapConfig = mapConfig;
         m_spriteTextureConfig = new SpriteTextureConfig(spriteConfigFile);
         m_spriteTexture = m_spriteTextureConfig.getTexture();
@@ -98,7 +100,7 @@ public abstract class Character {
         m_life = life;
         m_currentFrameTexture = null;
         m_isFacesRight = true;
-        m_enemies = new LinkedList<Character>();
+        m_enemies = enemies == null? new LinkedList<Character>() : enemies;
 
         m_hitAnimation = m_spriteTextureConfig.getHitAnimationConfig().getAnimation();
         m_throwAnimation = m_spriteTextureConfig.getThrowAnimationConfig().getAnimation();
@@ -127,6 +129,13 @@ public abstract class Character {
         m_rectangle = new Rectangle(0,0, m_size.x, m_size.y);
     }
 
+    public boolean isInScreen(OrthographicCamera camera){
+        float hHalf = camera.viewportHeight/2, wHalf = camera.viewportWidth/2;
+        return !(m_position.x > camera.position.x +wHalf || m_position.x+m_size.x < camera.position.x -wHalf
+                || m_position.y > camera.position.y + hHalf || m_position.y+ m_size.y < camera.position.y - hHalf);
+
+    }
+
     public void jump(){
         boolean jump = false;
 
@@ -148,6 +157,10 @@ public abstract class Character {
     public void run(){
         m_currentStateMove = StateMove.Running;
         m_moveVector.x *= 1.8f;
+    }
+
+    public void setEnemies(LinkedList<Character> enemies) {
+        this.m_enemies = enemies;
     }
 
     public void walk(boolean rightDirection){
@@ -364,6 +377,18 @@ public abstract class Character {
 
     public boolean isAlive(){
         return m_life > 1 ;
+    }
+
+    public boolean isGrounded() {
+        return m_isGrounded;
+    }
+
+    public boolean isDoubleJump() {
+        return m_isDoubleJump;
+    }
+
+    public void setIsDoubleJump(boolean isDoubleJump) {
+        this.m_isDoubleJump = isDoubleJump;
     }
 
     public LinkedList<Character> getEnemies() {
