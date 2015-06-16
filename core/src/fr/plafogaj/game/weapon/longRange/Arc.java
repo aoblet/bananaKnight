@@ -43,7 +43,7 @@ public class Arc extends LongRange {
             return;
 
         m_forceDirection.x = m_character.isFacesRight() ? Math.abs(m_forceDirection.x) :-Math.abs(m_forceDirection.x);
-        m_bullets.add(new Bullet(m_position.cpy().add(0,m_character.getSize().y*0.5f), m_forceDirection, LongRange.GRAVITY));
+        m_bullets.add(new Bullet(m_position.cpy().add(0,m_character.getSize().y*0.5f), m_forceDirection.cpy().add(m_character.getMoveVector().x, 0), LongRange.GRAVITY));
     }
 
     @Override
